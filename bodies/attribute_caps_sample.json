@@ -1,0 +1,45 @@
+{
+ "_meta": {
+   "dataset": "nba2k27-builder-rules",
+   "build": {
+     "game": "NBA 2K27",
+     "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",
+     "api_version": 202750199,
+     "live_tuning_version": 993560759169487438,
+     "captured": "2026-08-22"
+   },
+   "describes": "The 21 physical attribute caps for one reference body.",
+   "purpose": "Validation sample. Caps for any body are computed from tuning/progression_attributes.txt using the formula in the README.",
+   "reference_body": {
+     "position": "PG",
+     "height_inches": 75,
+     "weight_lb": 198,
+     "wingspan_inches": 78
+   },
+   "source": "native probe",
+   "record_count": 21
+ },
+ "data": [
+  {"attribute":0,"name":"close_shot","cap":99},
+  {"attribute":1,"name":"driving_layup","cap":99},
+  {"attribute":2,"name":"driving_dunk","cap":94},
+  {"attribute":3,"name":"standing_dunk","cap":51},
+  {"attribute":4,"name":"post_control","cap":80},
+  {"attribute":5,"name":"mid_range","cap":96},
+  {"attribute":6,"name":"three_point","cap":94},
+  {"attribute":7,"name":"free_throw","cap":99},
+  {"attribute":8,"name":"pass_accuracy","cap":99},
+  {"attribute":9,"name":"ball_handle","cap":97},
+  {"attribute":10,"name":"speed_with_ball","cap":92},
+  {"attribute":11,"name":"interior_defense","cap":73},
+  {"attribute":12,"name":"perimeter_defense","cap":99},
+  {"attribute":13,"name":"steal","cap":99},
+  {"attribute":14,"name":"block","cap":63},
+  {"attribute":15,"name":"offensive_rebound","cap":66},
+  {"attribute":16,"name":"defensive_rebound","cap":66},
+  {"attribute":17,"name":"speed","cap":97},
+  {"attribute":18,"name":"agility","cap":96},
+  {"attribute":19,"name":"strength","cap":74},
+  {"attribute":20,"name":"vertical","cap":99}
+ ]
+}

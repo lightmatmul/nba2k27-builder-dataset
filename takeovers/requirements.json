@@ -1,0 +1,58 @@
+{
+ "_meta": {
+   "dataset": "nba2k27-builder-rules",
+   "build": {
+     "game": "NBA 2K27",
+     "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",
+     "api_version": 202750199,
+     "live_tuning_version": 993560759169487438,
+     "captured": "2026-08-22"
+   },
+   "describes": "Attribute predicates gating each takeover ability.",
+   "source": "native probe over all 29 special-ability enum values",
+   "warning": "UNRESOLVED ENUM. The `attribute` codes here are NOT the 0-20 indices used everywhere else in this dataset - observed values reach 26, so these abilities index a larger PlayerData-style enumeration. The mapping was never confirmed, so codes are published raw. This is the least trustworthy part of the dataset.",
+   "notes": [
+     "A partial contiguous enum run was recovered from app metadata: ShotClose, DrivingLayup, DrivingDunk, StandingDunk, PostControl, ShotMidrange, ShotThree, ShotFreeThrow, PassAccuracy, BallControl, SpeedWithBall, InteriorDefense, PerimeterDefense, Steal, ReboundOffense, ReboundDefense, Agility, Strength.",
+     "Block, Speed and Vertical are absent from that contiguous run, so the list is incomplete.",
+     "Candidate sibling enums: CAREERMODE_ATTRIBUTE_TYPE_WITH_NONE, CAREERMODE_DERIVED_ATTRIBUTE_TYPE.",
+     "11 of the 29 abilities return zero requirement rows. That may mean 'unconditional' or may mean 'sentinel / non-player value'; it was never disambiguated.",
+     "2K documents 24 Takeover Abilities across 5 slots for 2K27, which is consistent with 29 enum values covering both."
+   ],
+   "fields": {
+     "ability": "native ability enum value",
+     "requirements": "list of {attribute (UNRESOLVED code), minimum, operator_to_next}"
+   },
+   "record_count": 29
+ },
+ "data": [
+  {"ability":1,"requirements":[{"attribute_code_unresolved":5,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":2,"requirements":[{"attribute_code_unresolved":21,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":3,"requirements":[{"attribute_code_unresolved":22,"minimum":87,"operator_to_next":"AND"},{"attribute_code_unresolved":25,"minimum":75,"operator_to_next":"AND"}]},
+  {"ability":4,"requirements":[]},
+  {"ability":5,"requirements":[{"attribute_code_unresolved":7,"minimum":89,"operator_to_next":"OR"},{"attribute_code_unresolved":6,"minimum":89,"operator_to_next":"AND"}]},
+  {"ability":6,"requirements":[{"attribute_code_unresolved":7,"minimum":85,"operator_to_next":"OR"},{"attribute_code_unresolved":6,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":7,"requirements":[{"attribute_code_unresolved":7,"minimum":91,"operator_to_next":"AND"}]},
+  {"ability":8,"requirements":[]},
+  {"ability":9,"requirements":[{"attribute_code_unresolved":9,"minimum":90,"operator_to_next":"AND"}]},
+  {"ability":10,"requirements":[]},
+  {"ability":11,"requirements":[{"attribute_code_unresolved":18,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":12,"requirements":[]},
+  {"ability":13,"requirements":[{"attribute_code_unresolved":12,"minimum":80,"operator_to_next":"AND"}]},
+  {"ability":14,"requirements":[]},
+  {"ability":15,"requirements":[{"attribute_code_unresolved":11,"minimum":80,"operator_to_next":"AND"}]},
+  {"ability":16,"requirements":[{"attribute_code_unresolved":15,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":17,"requirements":[{"attribute_code_unresolved":9,"minimum":85,"operator_to_next":"AND"},{"attribute_code_unresolved":24,"minimum":80,"operator_to_next":"AND"}]},
+  {"ability":18,"requirements":[{"attribute_code_unresolved":5,"minimum":80,"operator_to_next":"AND"},{"attribute_code_unresolved":3,"minimum":75,"operator_to_next":"AND"}]},
+  {"ability":19,"requirements":[{"attribute_code_unresolved":26,"minimum":88,"operator_to_next":"AND"}]},
+  {"ability":20,"requirements":[{"attribute_code_unresolved":12,"minimum":80,"operator_to_next":"AND"},{"attribute_code_unresolved":13,"minimum":80,"operator_to_next":"AND"},{"attribute_code_unresolved":26,"minimum":80,"operator_to_next":"AND"}]},
+  {"ability":21,"requirements":[{"attribute_code_unresolved":0,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":22,"requirements":[{"attribute_code_unresolved":14,"minimum":80,"operator_to_next":"AND"},{"attribute_code_unresolved":17,"minimum":80,"operator_to_next":"AND"}]},
+  {"ability":23,"requirements":[{"attribute_code_unresolved":12,"minimum":85,"operator_to_next":"AND"},{"attribute_code_unresolved":13,"minimum":85,"operator_to_next":"AND"}]},
+  {"ability":24,"requirements":[]},
+  {"ability":25,"requirements":[]},
+  {"ability":26,"requirements":[]},
+  {"ability":27,"requirements":[]},
+  {"ability":28,"requirements":[]},
+  {"ability":29,"requirements":[]}
+ ]
+}

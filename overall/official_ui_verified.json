@@ -1,0 +1,32 @@
+{
+ "_meta": {
+   "dataset": "nba2k27-builder-rules",
+   "build": {
+     "game": "NBA 2K27",
+     "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",
+     "api_version": 202750199,
+     "live_tuning_version": 993560759169487438,
+     "captured": "2026-08-22"
+   },
+   "describes": "The only records in this dataset corroborated outside the engine: two vectors reproduced in the signed-in official builder UI, capturing the 98-to-99 completion edge.",
+   "reference_body": {
+     "position": "PG",
+     "height_inches": 75,
+     "weight_lb": 198,
+     "wingspan_inches": 78
+   },
+   "source": "native probe + screenshot of the official builder",
+   "fields": {
+     "values": "21 ratings",
+     "standing_dunk": "the varied attribute",
+     "availability_rounded": "overall after upgrade-availability rounding",
+     "player_type": "winning archetype",
+     "overall": "integer shown in the official UI"
+   },
+   "record_count": 2
+ },
+ "data": [
+  {"kind":"overall_verified_ui","standing_dunk":50,"values":[92,86,88,50,80,85,74,61,86,78,82,73,86,91,62,66,66,82,85,74,89],"availability_rounded":98.994194,"player_type":0,"overall":98},
+  {"kind":"overall_verified_ui","standing_dunk":51,"values":[92,86,88,51,80,85,74,61,86,78,82,73,86,91,62,66,66,82,85,74,89],"availability_rounded":99.0,"player_type":0,"overall":98}
+ ]
+}

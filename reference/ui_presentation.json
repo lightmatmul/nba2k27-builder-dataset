@@ -1,0 +1,20 @@
+{
+ "_meta": {
+   "dataset": "nba2k27-builder-rules",
+   "build": {
+     "game": "NBA 2K27",
+     "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",
+     "api_version": 202750199,
+     "live_tuning_version": 993560759169487438,
+     "captured": "2026-08-22"
+   },
+   "describes": "Colours and grouping the official builder UI uses. Cosmetic, not rules.",
+   "source": "extracted from the app's native library",
+   "record_count": 3
+ },
+ "data": [
+  {"key":"discipline_colours","value":{"finishing":"#DB6E01","shooting":"#009B01","playmaking":"#059DD8","defense":"#4746FF","rebounding":"#BA2E6B","physicals":"#5B89BF"}},
+  {"key":"badge_max_tier","value":{}},
+  {"key":"attribute_count","value":21}
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "_meta": {
+   "dataset": "nba2k27-builder-rules",
+   "build": {
+     "game": "NBA 2K27",
+     "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",
+     "api_version": 202750199,
+     "live_tuning_version": 993560759169487438,
+     "captured": "2026-08-22"
+   },
+   "describes": "The 21 career attributes, in the exact index order the probe uses.",
+   "why_it_matters": "Every `attribute` integer in this dataset indexes this list.",
+   "source": "native attribute enumeration; order confirmed by full-dataset parity against the shipped engine",
+   "fields": {
+     "index": "0-20, the value appearing in `attribute` fields",
+     "name": "snake_case identifier used throughout this dataset",
+     "discipline": "one of the six builder disciplines",
+     "colour": "hex colour the official UI uses for this attribute"
+   },
+   "record_count": 21
+ },
+ "data": [
+  {"index":0,"name":"close_shot","discipline":"finishing","colour":"#DB6E01"},
+  {"index":1,"name":"driving_layup","discipline":"finishing","colour":"#DB6E01"},
+  {"index":2,"name":"driving_dunk","discipline":"finishing","colour":"#DB6E01"},
+  {"index":3,"name":"standing_dunk","discipline":"finishing","colour":"#DB6E01"},
+  {"index":4,"name":"post_control","discipline":"finishing","colour":"#DB6E01"},
+  {"index":5,"name":"mid_range","discipline":"shooting","colour":"#009B01"},
+  {"index":6,"name":"three_point","discipline":"shooting","colour":"#009B01"},
+  {"index":7,"name":"free_throw","discipline":"shooting","colour":"#009B01"},
+  {"index":8,"name":"pass_accuracy","discipline":"playmaking","colour":"#059DD8"},
+  {"index":9,"name":"ball_handle","discipline":"playmaking","colour":"#059DD8"},
+  {"index":10,"name":"speed_with_ball","discipline":"playmaking","colour":"#059DD8"},
+  {"index":11,"name":"interior_defense","discipline":"defense","colour":"#4746FF"},
+  {"index":12,"name":"perimeter_defense","discipline":"defense","colour":"#4746FF"},
+  {"index":13,"name":"steal","discipline":"defense","colour":"#4746FF"},
+  {"index":14,"name":"block","discipline":"defense","colour":"#4746FF"},
+  {"index":15,"name":"offensive_rebound","discipline":"rebounding","colour":"#BA2E6B"},
+  {"index":16,"name":"defensive_rebound","discipline":"rebounding","colour":"#BA2E6B"},
+  {"index":17,"name":"speed","discipline":"physicals","colour":"#5B89BF"},
+  {"index":18,"name":"agility","discipline":"physicals","colour":"#5B89BF"},
+  {"index":19,"name":"strength","discipline":"physicals","colour":"#5B89BF"},
+  {"index":20,"name":"vertical","discipline":"physicals","colour":"#5B89BF"}
+ ]
+}

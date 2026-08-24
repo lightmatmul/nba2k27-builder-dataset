@@ -1,0 +1,29 @@
+{
+ "_meta": {
+   "dataset": "nba2k27-builder-rules",
+   "build": {
+     "game": "NBA 2K27",
+     "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",
+     "api_version": 202750199,
+     "live_tuning_version": 993560759169487438,
+     "captured": "2026-08-22"
+   },
+   "describes": "Inputs to the native slot allocator, plus the default allocation.",
+   "source": "native probe",
+   "notes": [
+     "The allocator blends each discipline's share of token potential (weight `blend`) with its share of eligible badges (weight 1-blend), scales by `total_slots`, clamps to per-discipline minimums/maximums, then distributes any rounding remainder using the tie-break orders.",
+     "Every build gets 20 slots across the six disciplines."
+   ],
+   "record_count": 8
+ },
+ "data": [
+  {"key":"total_slots","value":20},
+  {"key":"blend","value":0.400000006},
+  {"key":"minimums","value":[0,0,0,0,0,0],"order":"discipline_order"},
+  {"key":"maximums","value":[7,7,7,7,5,6],"order":"discipline_order"},
+  {"key":"add_tiebreak","value":[2,4,3,1,6,5],"order":"discipline_order"},
+  {"key":"remove_tiebreak","value":[3,1,2,4,5,6],"order":"discipline_order"},
+  {"key":"default_slots","value":[4,4,4,4,1,3],"order":"discipline_order"},
+  {"key":"default_tokens","value":[20,20,21,17,4,14],"order":"discipline_order"}
+ ]
+}
