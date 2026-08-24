@@ -301,6 +301,13 @@ minimums: raising a source attribute forces each associated attribute to at leas
 `source − MaxDelta`. These cascade, since a forced raise can itself be a source.
 The rules are height-specific.
 
+⚠️ **`MaxDelta 0` is not enforced as equality.** It occurs exactly 20 times in
+the file — once per height, always `SpeedWithBall → Speed` — which the rule above
+would read as "speed must be at least speed_with_ball". A build observed in the
+retail builder UI carries `speed_with_ball` 88 with `speed` 87, so that reading is
+wrong. Treat `MaxDelta 0` as a special case, not as a constraint, until its real
+meaning is recovered.
+
 ---
 
 ## Verification
@@ -354,7 +361,10 @@ Read these before using the numbers.
    at the reference body only. The tuning tables generalise; these do not.
 3. **`player_type` 1 never appears** as a winner in the 256 mixed vectors. There
    are 15 archetypes (0–14) and 14 were observed winning; absence is not evidence
-   the archetype does not exist.
+   the archetype does not exist. The dataset carries no names for these indices,
+   but one is pinned externally: a PG 6'3"/194 lb/6'6" build shown in the retail
+   builder UI as **"Playshot Point"** computes `player_type` 6 as its winning
+   archetype, so 6 is very likely that label.
 4. **Takeover attribute codes are unresolved.** See above.
 5. **Badge display names** are high-confidence but not exhaustively verified.
    Badge *IDs* are authoritative. 2K publicly named only three of 2K27's new
