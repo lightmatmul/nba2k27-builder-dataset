@@ -11,10 +11,13 @@
    "describes": "Inputs to the native slot allocator, plus the default allocation.",
    "source": "native probe",
    "notes": [
-     "The allocator blends each discipline's share of token potential (weight `blend`) with its share of eligible badges (weight 1-blend), scales by `total_slots`, clamps to per-discipline minimums/maximums, then distributes any rounding remainder using the tie-break orders.",
+     "WARNING: the obvious reading of these constants does NOT reproduce badges/slot_allocations.json. Sweeping `blend` from 0 to 1 with largest-remainder rounding reaches only 569/2123 exact (27%), and the best-fitting blend is ~0.075 rather than the shipped 0.4.",
+     "`maximums` [7,7,7,7,5,6] is NOT a cap on the allocation: recorded allocations reach 11 finishing, 8 shooting, 20 playmaking, 11 defense and 9 rebounding. Its role is unknown.",
+     "Established: the allocation is a deterministic function of (per-discipline token totals, per-discipline count of badges the build qualifies for at any tier). 2,084 distinct feature keys in the ground truth, zero mapping to two different allocations, and height adds no information beyond its effect on those two features.",
      "Every build gets 20 slots across the six disciplines."
    ],
-   "record_count": 8
+   "record_count": 8,
+   "verification": "Constants checked against badges/slot_allocations.json; see notes. The combining rule remains unrecovered."
  },
  "data": [
   {"key":"total_slots","value":20},

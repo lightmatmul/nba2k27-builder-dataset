@@ -175,10 +175,29 @@ count is `Σ(ceiling − 24) = 1,328`, matching
 | `slot_allocations.json` | 2,123 | Ground-truth slot allocation for full vectors (2,048 random across 10 heights + 75 uniform). Slot allocation is *not* additive, so it cannot be derived from the contribution table — these records are what pin the allocator down. |
 | `slot_allocator_constants.json` | 8 | Allocator inputs: 20 total slots, blend factor, per-discipline minimums/maximums, tie-break orders, and the default allocation. |
 
-The allocator blends each discipline's share of token potential (weight `blend`)
-with its share of eligible badges (weight `1 − blend`), scales by total slots,
-clamps to the per-discipline limits, then distributes rounding remainders using
-the tie-break orders.
+⚠️ **The allocator formula is unresolved.** The plausible reading of the
+constants — blend each discipline's share of token potential (weight `blend`)
+with its share of eligible badges (weight `1 − blend`), scale by `total_slots`,
+clamp to the per-discipline limits, then distribute rounding remainders by the
+tie-break orders — **does not reproduce the ground truth**, and two specific
+things rule it out:
+
+- **The stated `maximums` are not caps.** `maximums` is `[7,7,7,7,5,6]`, but the
+  2,123 recorded allocations reach 11 finishing, 8 shooting, 20 playmaking, 11
+  defense and 9 rebounding. Whatever `maximums` governs, it is not a ceiling on
+  the allocation.
+- **No blend value fits.** Sweeping `blend` from 0 to 1 with largest-remainder
+  rounding tops out at 569/2,123 exact (27%), and the best-fitting value is
+  ≈0.075, not the shipped `0.4`.
+
+What *is* established: the allocation is a **deterministic function of
+(per-discipline token totals, per-discipline count of badges the build qualifies
+for at any tier)**. Across the 2,084 distinct feature keys in the ground truth,
+no key maps to two different allocations, and adding height as a feature changes
+nothing. So the inputs are identified and the problem is well-posed — only the
+combining rule is missing. Until it is recovered, use
+`badges/slot_allocations.json` as a lookup and interpolation base rather than
+trusting any formula, including the one above.
 
 One shipped quirk worth knowing: `unpluckable` at hall of fame requires
 `post_control ≥ 100`, above the 99 maximum. It sits on an `OR` branch, so the
@@ -358,13 +377,14 @@ selection and the non-linear rating scales (256/256 vectors, 75/75 uniform).
 
 **Strong**, from measurement with internal invariants holding — badge tier
 requirements (monotonic across all 53), token costs, token contributions
-(additivity confirmed on 2,048 vectors), slot allocation (2,123 allocations),
-cap-breaker gain sequences (13,280 rows, monotonic and ceiling-respecting), legal
-bodies, linked-attribute minimums.
+(additivity confirmed on 2,048 vectors), the 2,123 recorded slot allocations
+themselves, cap-breaker gain sequences (13,280 rows, monotonic and
+ceiling-respecting), legal bodies, linked-attribute minimums.
 
-**Weak** — takeover enum mapping; the 5 extra takeover abilities beyond 2K's
-published 24; badge and takeover display names; animation size-family
-boundaries; `overall/single_attribute.json`.
+**Weak** — the slot-allocator *formula* (inputs identified, combining rule
+unresolved; the recorded allocations are still solid); takeover enum mapping; the
+5 extra takeover abilities beyond 2K's published 24; badge and takeover display
+names; animation size-family boundaries; `overall/single_attribute.json`.
 
 ---
 

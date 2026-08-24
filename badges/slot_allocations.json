@@ -9,7 +9,7 @@
      "captured": "2026-08-22"
    },
    "describes": "Ground-truth default badge-slot allocation for full attribute vectors.",
-   "why_it_matters": "Slot allocation is NOT additive across attributes, unlike tokens, so it cannot be derived from token_contributions. These are the only records that pin the allocator down.",
+   "why_it_matters": "Slot allocation is NOT additive across attributes, unlike tokens, so it cannot be derived from token_contributions. These are the only records that pin the allocator down - and since the formula in slot_allocator_constants.json does not reproduce them, these records are currently the ONLY reliable source of allocation behaviour. Use them as a lookup, not as a test set for the documented formula.",
    "source": "native probe (2,048 pseudo-random vectors across 10 heights, plus 75 uniform vectors at 75 inches)",
    "notes": [
      "Token counts were deliberately omitted: they are exactly reproducible by summing badges/token_contributions.json."
@@ -21,7 +21,7 @@
      "slot_total": "sum of slots"
    },
    "record_count": 2123,
-   "verification": "Audited: every vector is 21 values, slots always sum to slot_total, and slot_total is only ever 0 or 20 - consistent with every build receiving 20 badge slots. Every vector also resolves against badges/token_contributions.json."
+   "verification": "Audited: every vector is 21 values, slots always sum to slot_total, and slot_total is only ever 0 or 20. Every vector resolves against badges/token_contributions.json. Further established: allocation is a deterministic function of (per-discipline tokens, per-discipline count of qualified badges) - 2,084 distinct keys, zero collisions."
  },
  "data": [
   {"vector":"mixed","sample":0,"height_inches":79,"values":[56,30,35,68,62,66,38,66,93,69,60,39,41,43,64,84,87,92,61,61,80],"slots":[3,3,6,0,4,4],"slot_total":20},
