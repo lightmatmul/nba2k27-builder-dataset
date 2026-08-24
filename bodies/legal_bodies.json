@@ -14,7 +14,8 @@
      "Wingspan range is always height to height+6 inches.",
      "Position restricts which bodies are legal but does not affect attribute caps."
    ],
-   "record_count": 5
+   "record_count": 5,
+   "verification": "Audited: 45 body rows across 5 positions; every height has matching tuning multipliers; each position's declared height range equals the span of its body rows; defaults fall inside their ranges; and wingspan is always height to height+6 inches."
  },
  "data": [
   {"position":"PG","height_inches":[69,79],"default_height_inches":75,"bodies":[{"height_inches":69,"weight_lb":[145,185],"default_weight_lb":165,"wingspan_inches":[69,75],"default_wingspan_inches":72},{"height_inches":70,"weight_lb":[150,190],"default_weight_lb":170,"wingspan_inches":[70,76],"default_wingspan_inches":73},{"height_inches":71,"weight_lb":[155,195],"default_weight_lb":175,"wingspan_inches":[71,77],"default_wingspan_inches":74},{"height_inches":72,"weight_lb":[155,205],"default_weight_lb":180,"wingspan_inches":[72,78],"default_wingspan_inches":75},{"height_inches":73,"weight_lb":[160,215],"default_weight_lb":188,"wingspan_inches":[73,79],"default_wingspan_inches":76},{"height_inches":74,"weight_lb":[165,220],"default_weight_lb":193,"wingspan_inches":[74,80],"default_wingspan_inches":77},{"height_inches":75,"weight_lb":[170,225],"default_weight_lb":198,"wingspan_inches":[75,81],"default_wingspan_inches":78},{"height_inches":76,"weight_lb":[175,230],"default_weight_lb":203,"wingspan_inches":[76,82],"default_wingspan_inches":79},{"height_inches":77,"weight_lb":[175,230],"default_weight_lb":203,"wingspan_inches":[77,83],"default_wingspan_inches":80},{"height_inches":78,"weight_lb":[180,230],"default_weight_lb":205,"wingspan_inches":[78,84],"default_wingspan_inches":81},{"height_inches":79,"weight_lb":[180,230],"default_weight_lb":205,"wingspan_inches":[79,85],"default_wingspan_inches":82}]},

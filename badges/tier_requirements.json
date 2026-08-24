@@ -15,7 +15,11 @@
      "Only bronze/silver/gold/hall_of_fame exist at creation. The legend tier is not obtainable in the builder; it is reached in-game via the Synergy system, so it has no requirement row.",
      "`requirements` is evaluated left to right, each entry's `operator_to_next` combining it with the following entry. An empty list means no attribute gate."
    ],
-   "record_count": 212
+   "record_count": 212,
+   "verification": "Tier labels validated by monotonicity: across all 53 badges, no higher tier requires a lower attribute minimum than the tier below it. That is the signature of a correct tier alignment, and it would break if the source off-by-one had been resolved the wrong way.",
+   "quirks": [
+     "unpluckable / hall_of_fame requires post_control >= 100, which is above the 99 maximum. It sits on an OR branch, so the effect is to disable that branch and leave the other clause as the real requirement. This is genuine shipped data, not a transcription error."
+   ]
  },
  "data": [
   {"badge":17,"name":"float_game","tier":"bronze","requirements":[{"attribute":0,"name":"close_shot","minimum":65,"operator_to_next":"OR"},{"attribute":1,"name":"driving_layup","minimum":65,"operator_to_next":"AND"}]},

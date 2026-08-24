@@ -8,19 +8,23 @@
      "live_tuning_version": 993560759169487438,
      "captured": "2026-08-22"
    },
-   "describes": "Overall rating when exactly one attribute is raised and the other 20 stay at the 25 floor. The per-attribute overall cost curve.",
+   "describes": "Overall rating reported by the native best-overall routine with exactly one attribute raised and the other 20 left at the 25 floor.",
+   "warning": "SEMANTICS UNVERIFIED - DO NOT TREAT AS A COST CURVE. This file could NOT be reproduced from tuning/progression_attributes.txt, unlike every other file in overall/. Only the 21 all-floor rows match a reimplementation. 14 of the 21 attributes report exactly 25.0 at every rating, and the 7 that move only do so in the top few points of their range (three_point first moves at 88, close_shot at 94). The values look saturated against the 25 floor, meaning the routine was probably called in a configuration that was never pinned down. Retained as a raw measurement for anyone who resolves the routine; not safe to build on.",
    "reference_body": {
      "position": "PG",
      "height_inches": 75,
      "weight_lb": 198,
      "wingspan_inches": 78
    },
-   "source": "native probe (first capture run; this measurement was not repeated)",
+   "source": "native probe, first capture run; this measurement was not repeated",
+   "coverage": "Sparse by construction: each attribute was swept from 25 up to its ceiling at the reference body, not to 99. That is why there are 1,328 rows rather than 21 x 75 = 1,575, and it exactly matches bodies/attribute_caps_sample.json.",
+   "if_you_want_a_cost_curve": "Derive it from tuning/progression_attributes.txt. That math is confirmed against overall/mixed_vectors.json on all 256 vectors.",
    "fields": {
      "attribute": "index into reference/attributes.json",
+     "name": "attribute name",
      "rating": "value that attribute was set to",
-     "best": "float overall",
-     "player_type": "winning archetype"
+     "best": "value the native routine returned (see warning)",
+     "player_type": "archetype the routine reported"
    },
    "record_count": 1328
  },

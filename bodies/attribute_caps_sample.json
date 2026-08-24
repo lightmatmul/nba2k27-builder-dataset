@@ -17,7 +17,8 @@
      "wingspan_inches": 78
    },
    "source": "native probe",
-   "record_count": 21
+   "record_count": 21,
+   "verification": "Independently reproduced from tuning/progression_attributes.txt by reimplementing the engine's math from the tuning tables alone, with no reference to these recorded values. All 21 ceilings matched exactly. Independently cross-checked a second way: overall/single_attribute.json was probed from 25 up to each attribute's ceiling, and its 1,328 rows equal sum(ceiling - 24) over these same 21 values."
  },
  "data": [
   {"attribute":0,"name":"close_shot","cap":99},

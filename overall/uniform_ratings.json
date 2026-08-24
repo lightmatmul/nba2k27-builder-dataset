@@ -24,7 +24,12 @@
      "best_player_type": "winning archetype for `best`",
      "overall": "the integer the builder displays"
    },
-   "record_count": 75
+   "record_count": 75,
+   "verification": "Independently reproduced from tuning/progression_attributes.txt by reimplementing the engine's math from the tuning tables alone, with no reference to these recorded values. All 75 rows matched `detailed` and `best` to within 1e-4, which also confirms these were probed at the 75-inch reference height.",
+   "notes": [
+     "`best` and `detailed` diverge from rating 84 upward: `best` saturates at 99.0 and reports player_type 0, while `detailed` reports 98.999992 with the true winning archetype. They are two different native routines.",
+     "`best` equals clamp-to-99 of the maximum across all 15 archetypes."
+   ]
  },
  "data": [
   {"rating":25,"detailed":25.000002,"detailed_player_type":0,"best":25.000002,"best_player_type":0,"overall":25},

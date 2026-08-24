@@ -26,7 +26,8 @@
      "uncapped_player_type": "winning archetype for `uncapped`",
      "overall": "the integer the builder displays"
    },
-   "record_count": 256
+   "record_count": 256,
+   "verification": "Independently reproduced from tuning/progression_attributes.txt by reimplementing the engine's math from the tuning tables alone, with no reference to these recorded values. All 256 vectors matched `detailed`, `best` and the winning `player_type` to within 1e-4. This is the strongest corroboration in the dataset: the tuning tables and the probe measurements agree exactly."
  },
  "data": [
   {"sample":0,"values":[47,30,47,26,79,54,87,77,36,55,45,31,73,53,27,40,43,34,85,50,51],"detailed":64.688316,"player_type":14,"best":64.688316,"best_player_type":14,"uncapped":64.688316,"uncapped_player_type":14,"overall":64},

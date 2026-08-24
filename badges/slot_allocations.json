@@ -20,7 +20,8 @@
      "slots": "6 values in discipline_order",
      "slot_total": "sum of slots"
    },
-   "record_count": 2123
+   "record_count": 2123,
+   "verification": "Audited: every vector is 21 values, slots always sum to slot_total, and slot_total is only ever 0 or 20 - consistent with every build receiving 20 badge slots. Every vector also resolves against badges/token_contributions.json."
  },
  "data": [
   {"vector":"mixed","sample":0,"height_inches":79,"values":[56,30,35,68,62,66,38,66,93,69,60,39,41,43,64,84,87,92,61,61,80],"slots":[3,3,6,0,4,4],"slot_total":20},

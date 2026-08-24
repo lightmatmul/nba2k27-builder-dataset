@@ -29,7 +29,8 @@
      "application": "0-4, which of the five breakers",
      "gain": "rating points added"
    },
-   "record_count": 13280
+   "record_count": 13280,
+   "verification": "Audited invariants: gains are non-negative; the five applications are non-increasing for every (scenario, attribute, rating) sequence; and in the isolated scenario rating + gain never exceeds the attribute's ceiling at the reference body, confirming breakers approach the physical ceiling without passing it."
  },
  "data": [
   {"scenario":"isolated","attribute":0,"name":"close_shot","rating":25,"application":0,"gain":7},

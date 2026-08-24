@@ -22,7 +22,8 @@
      "ability": "native ability enum value",
      "requirements": "list of {attribute (UNRESOLVED code), minimum, operator_to_next}"
    },
-   "record_count": 29
+   "record_count": 29,
+   "verification": "Audited: the attribute codes reach 26, which is above the 0-20 range of the career attribute enum. This positively confirms they belong to a different, larger enumeration rather than being a mislabelled index."
  },
  "data": [
   {"ability":1,"requirements":[{"attribute_code_unresolved":5,"minimum":85,"operator_to_next":"AND"}]},

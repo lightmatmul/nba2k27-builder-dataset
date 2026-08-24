@@ -11,7 +11,8 @@
    "describes": "Token price to equip each badge at each tier, for every legal height. 53 badges x 5 tiers x 20 heights.",
    "source": "native probe",
    "notes": [
-     "Cost varies with height: the same badge can be cheaper for a guard than a centre."
+     "Cost varies with height: the same badge can be cheaper for a guard than a centre.",
+     "All 1,060 legend-tier rows (53 badges x 20 heights) have cost 0, and legend rows are exactly the zero-cost rows. Legend cannot be equipped at build creation - it is reached in-game through the Synergy system - so the builder has no price for it. Treat cost 0 at legend as 'not purchasable here', not as 'free'."
    ],
    "fields": {
      "badge": "badge ID",

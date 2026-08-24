@@ -79,8 +79,10 @@ for everything).
   across six disciplines, and a badge's token cost changes with your height.
 - **Disciplines.** Six groups used for both attributes and badges: finishing,
   shooting, playmaking, defense, rebounding, physicals.
-- **Takeovers.** Temporary in-game boosts gated behind attribute thresholds. 2K27
-  ships 24 takeover abilities across 5 slots.
+- **Takeovers.** Temporary in-game boosts gated behind attribute thresholds. 2K
+  publicly describes 24 takeover abilities across 5 slots; the engine returned
+  requirement records for 29, so the extra 5 are presumably unshipped or
+  internal. The dataset publishes what the engine returned.
 - **Animations.** Jumpshots, dunks, dribble moves — gated by attribute minimums
   and by **size family** (`SMALLS` / `SWINGS` / `BIGS`).
 
@@ -136,9 +138,31 @@ The tuning tables generalise to every body; these probe samples do not.
 | File | Records | Contents |
 |---|---|---|
 | `uniform_ratings.json` | 75 | OVR with all 21 attributes set to the same value, 25→99. |
-| `single_attribute.json` | 1,328 | OVR with exactly one attribute raised and the other 20 at floor. The per-attribute OVR cost curve. |
 | `mixed_vectors.json` | 256 | OVR for 256 pseudo-random full attribute vectors, with `detailed`, `best` and `uncapped` values and each one's winning archetype. **The parity set for any reimplementation of the pricing function.** |
 | `official_ui_verified.json` | 2 | Two vectors reproduced in the signed-in official builder UI, capturing the 98→99 completion edge. The only records here corroborated outside the engine. |
+| `single_attribute.json` | 1,328 | One attribute raised, the other 20 left at floor. ⚠️ **Semantics unverified — not a cost curve.** See below. |
+
+`uniform_ratings.json` and `mixed_vectors.json` are the trustworthy pricing
+records: both reproduce exactly from `tuning/`. `best` and `detailed` are two
+different native routines and they diverge — from rating 84 up, `best` saturates
+at `99.0` and reports archetype 0 while `detailed` reports `98.999992` with the
+true winning archetype.
+
+⚠️ **`single_attribute.json` is retained but not safe to build on.** It is the
+one file in `overall/` that could *not* be reproduced from the tuning tables —
+only its 21 all-floor rows match a reimplementation. 14 of the 21 attributes
+report exactly `25.0` at every rating, and the 7 that move only move in the top
+few points of their range (`three_point` first moves at 88, `close_shot` at 94),
+which is what saturation against the 25 floor looks like. The routine was
+evidently called in a configuration that was never pinned down. It is kept as a
+raw measurement for anyone who resolves it. **If you want a per-attribute cost
+curve, derive it from `tuning/`** — that math is confirmed on all 256 mixed
+vectors.
+
+Its sparsity is meaningful, though, and doubles as a cross-check: each attribute
+was swept from 25 only as far as its *ceiling* at the reference body, so the row
+count is `Σ(ceiling − 24) = 1,328`, matching
+`bodies/attribute_caps_sample.json` exactly.
 
 ### `badges/`
 
@@ -146,7 +170,7 @@ The tuning tables generalise to every body; these probe samples do not.
 |---|---|---|
 | `definitions.json` | 53 | Discipline, native group code, and height eligibility per badge. A `63–91` range means unrestricted. |
 | `tier_requirements.json` | 212 | Attribute requirements per badge per creation tier — 53 × 4. Requirements are an ordered predicate list combined by each entry's `operator_to_next`. |
-| `token_costs.json` | 5,300 | Token price per badge, per tier, per height — 53 × 5 × 20. |
+| `token_costs.json` | 5,300 | Token price per badge, per tier, per height — 53 × 5 × 20. All 1,060 **legend** rows cost `0` — legend cannot be equipped at creation, so the builder has no price for it. Read `0` at legend as "not purchasable here", not "free". |
 | `token_contributions.json` | 31,500 | Tokens earned from one attribute at one rating at one height — 21 × 75 × 20. **The token function is additive across attributes**, so summing a build's 21 rows gives its exact token budget. Verified against 2,048 native vectors. |
 | `slot_allocations.json` | 2,123 | Ground-truth slot allocation for full vectors (2,048 random across 10 heights + 75 uniform). Slot allocation is *not* additive, so it cannot be derived from the contribution table — these records are what pin the allocator down. |
 | `slot_allocator_constants.json` | 8 | Allocator inputs: 20 total slots, blend factor, per-discipline minimums/maximums, tie-break orders, and the default allocation. |
@@ -155,6 +179,11 @@ The allocator blends each discipline's share of token potential (weight `blend`)
 with its share of eligible badges (weight `1 − blend`), scales by total slots,
 clamps to the per-discipline limits, then distributes rounding remainders using
 the tie-break orders.
+
+One shipped quirk worth knowing: `unpluckable` at hall of fame requires
+`post_control ≥ 100`, above the 99 maximum. It sits on an `OR` branch, so the
+effect is that the branch is dead and the other clause is the real requirement.
+That is genuine data, not a transcription error.
 
 ### `cap_breakers/`
 
@@ -237,7 +266,8 @@ Key families in `progression_attributes.txt`:
 | `HeightBasedOverallLerp[H].Value[i][j]` | 124 | final raw → OVR interpolation endpoints |
 | `PlayerRestrictions[NBA].MinMax*`, `Min/MaxWeight`, `Default*` | 64 | legal body ranges per position |
 
-**The attribute ceiling formula**, confirmed against the engine on 256 vectors:
+**The attribute ceiling formula**, which reproduces all 21 measured ceilings in
+`bodies/attribute_caps_sample.json` exactly:
 
 ```
 ceiling = clamp(round(25 + 74 × height_mult × weight_mult × wingspan_mult), 25, 99)
@@ -253,6 +283,46 @@ minimums: raising a source attribute forces each associated attribute to at leas
 The rules are height-specific.
 
 ---
+
+## Verification
+
+The dataset contains two independent kinds of artifact: the **named tuning
+tables** the engine reads, and the **probe measurements** of what the engine
+returned. That makes it self-checking — the math can be rebuilt from the tuning
+tables alone and held against the measurements, with neither side informing the
+other. Doing that gives:
+
+| Check | Result |
+|---|---|
+| 21 attribute ceilings recomputed from `tuning/` | 21 / 21 exact |
+| `mixed_vectors` `detailed` recomputed from `tuning/` | 256 / 256 to 1e-4 |
+| `mixed_vectors` winning archetype recomputed | 256 / 256 |
+| `mixed_vectors` `best` and `uncapped` recomputed | 256 / 256 |
+| `uniform_ratings` recomputed from `tuning/` | 75 / 75 |
+| `single_attribute` recomputed from `tuning/` | **21 / 1,328 — see the warning above** |
+| Token additivity: 2,048 vectors summed from the contribution table | consistent |
+| Slot allocations summing to their declared totals | 2,123 / 2,123 |
+| Cap-breaker gains non-increasing across the 5 applications | no violations |
+| Cap-breaker gains never exceeding the body's ceiling | no violations |
+| Badge tiers monotonically non-decreasing across all 53 badges | no violations |
+| `single_attribute` row count vs `Σ(ceiling − 24)` | 1,328 = 1,328 |
+| Every `attribute` index, badge ID and discipline resolving via `reference/` | complete |
+| One build identity declared across every file | consistent |
+
+Two of those deserve emphasis. The **256-vector agreement** is the strongest
+result in the dataset: reimplementing the pricing function from the tuning
+tables reproduces every measured float, including the non-linear rating scales
+and archetype selection, so the tuning export and the probe corroborate each
+other. And the **tier monotonicity** result matters because tier alignment was
+the one non-trivial correction applied to the source data — a misaligned tier
+would show up as a higher tier demanding a *lower* attribute minimum, and no
+badge does that.
+
+`overall/single_attribute.json` is the one measurement that failed to
+corroborate. It is kept, clearly flagged, and excluded from the strong-confidence
+list below.
+
+Per-file results are recorded in each `_meta.verification`.
 
 ## Caveats
 
@@ -272,20 +342,29 @@ Read these before using the numbers.
    badges — pace, wall_up, flash — and all three match, which is good but partial
    corroboration.
 6. **Animation size-family height boundaries are absent** by choice.
-7. **Single capture.** Everything comes from one device capture of one game
-   build, mostly verified against the engine that produced it — which is circular
-   in that a bug in the shipped engine would be faithfully reproduced here. Only
-   2 records were checked against the official UI.
+7. **`overall/single_attribute.json` has unverified semantics.** The only
+   measurement in the dataset that does not reproduce from the tuning tables.
+8. **Single capture.** Everything comes from one device capture of one game
+   build. The cross-check described above is genuinely independent — tuning
+   tables versus recorded engine output — but both come from the same shipped
+   build, so a bug in the game itself would be reproduced faithfully rather than
+   caught. Only 2 records were checked against the official UI.
 
 ### Confidence summary
 
-**Strong** — attribute ceilings and the ceiling formula (256 vectors); the OVR
-pricing function including archetype selection and non-linear scales; badge tier
-requirements, token costs and slot allocation (2,123 allocations); cap-breaker
-gain sequences (13,280 rows); linked-attribute minimums.
+**Strong**, and independently reproduced from the tuning tables — the attribute
+ceiling formula (21/21 ceilings) and the OVR pricing function including archetype
+selection and the non-linear rating scales (256/256 vectors, 75/75 uniform).
 
-**Weak** — takeover enum mapping; badge and takeover display names; animation
-size-family boundaries.
+**Strong**, from measurement with internal invariants holding — badge tier
+requirements (monotonic across all 53), token costs, token contributions
+(additivity confirmed on 2,048 vectors), slot allocation (2,123 allocations),
+cap-breaker gain sequences (13,280 rows, monotonic and ceiling-respecting), legal
+bodies, linked-attribute minimums.
+
+**Weak** — takeover enum mapping; the 5 extra takeover abilities beyond 2K's
+published 24; badge and takeover display names; animation size-family
+boundaries; `overall/single_attribute.json`.
 
 ---
 

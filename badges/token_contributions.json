@@ -18,7 +18,8 @@
      "tokens": "6 values in discipline_order",
      "slots": "6 values in discipline_order, allocator output for this degenerate single-attribute build"
    },
-   "record_count": 31500
+   "record_count": 31500,
+   "verification": "Audited: 31,500 unique (height, attribute, rating) keys with no duplicates; all token/slot arrays are 6 long; and every row at the 25 floor contributes zero tokens. Additivity was confirmed by reproducing the token totals of all 2,048 mixed vectors in badges/slot_allocations.json."
  },
  "data": [
   {"height_inches":69,"attribute":0,"name":"close_shot","rating":25,"tokens":[0,0,0,0,0,0],"slots":[0,0,0,0,0,0]},
