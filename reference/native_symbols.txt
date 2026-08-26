@@ -2,7 +2,7 @@
 # (libcsharplib_mobile). These are the entry points the capture called
 # directly; they are what makes this dataset measurements rather than guesses.
 #
-# Dataset: nba2k27-builder-rules | captured 2026-08-22
+# Dataset: nba2k27-builder-dataset | captured 2026-08-22
 #
 ATTRIBUTES_CalculateBestOverallRating
 ATTRIBUTES_DetermineDescription

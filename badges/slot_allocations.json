@@ -1,6 +1,6 @@
 {
  "_meta": {
-   "dataset": "nba2k27-builder-rules",
+   "dataset": "nba2k27-builder-dataset",
    "build": {
      "game": "NBA 2K27",
      "source_app": "NBA 2K HQ (com.VisualConcepts.MyNBASherpa)",

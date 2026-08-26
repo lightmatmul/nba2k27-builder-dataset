@@ -1,6 +1,6 @@
 // NBA 2K27 career-mode progression tuning - named key/value export.
 //
-// Dataset : nba2k27-builder-rules
+// Dataset : nba2k27-builder-dataset
 // Game    : NBA 2K27 (NBA 2K HQ, com.VisualConcepts.MyNBASherpa)
 // Tuning  : live_version 993560759169487438, api_version 202750199
 // Captured: 2026-08-22

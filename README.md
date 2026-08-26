@@ -18,9 +18,10 @@ and recording what it returned.
 | `live_tuning_version` | `993560759169487438` |
 | Captured | 2026-08-22 |
 
-Every file repeats this in its `_meta.build` block. **2K patches tuning
-server-side**, so any of these values can change without a client update. Check
-the version before trusting a number against a live game.
+Every file except `animations/glossary.json` repeats this in its `_meta.build`
+block. **2K patches tuning server-side**, so any of these values can change
+without a client update. Check the version before trusting a number against a
+live game.
 
 ## Layout
 
@@ -35,7 +36,8 @@ animations/   the official animation glossary
 tuning/       the shipped tuning tables the engine reads
 ```
 
-Every `.json` file has the same shape, so one loader handles all of them:
+Every `.json` file *except* `animations/glossary.json` has the same shape, so one
+loader handles all of them:
 
 ```python
 import json
@@ -47,6 +49,11 @@ doc["data"]      # list of records
 
 `_meta` is worth reading per file — it carries the field semantics and the
 caveats specific to that measurement.
+
+⚠️ **`animations/glossary.json` does not follow that shape.** It is the app's own
+file passed through verbatim, so it has no `_meta` and no `data` — its single top
+level key is `Anim Glossary Tabs`. Special-case it, or the loader above will
+raise on it.
 
 ---
 
@@ -75,8 +82,10 @@ for everything).
   attribute thresholds across four builder tiers — **bronze, silver, gold, hall
   of fame** — plus a fifth **legend** tier that cannot be reached in the builder
   at all and is only unlocked in-game through the Synergy system. New for 2K27,
-  you **spend badge tokens** to equip badges: every build gets 20 slots split
-  across six disciplines, and a badge's token cost changes with your height.
+  you **spend badge tokens** to equip badges: a build that qualifies for at least
+  one badge gets 20 slots split across six disciplines, and a badge's token cost
+  changes with your height. A build that qualifies for nothing gets 0 slots, not
+  20 — see `badges/slot_allocations.json`.
 - **Disciplines.** Six groups used for both attributes and badges: finishing,
   shooting, playmaking, defense, rebounding, physicals.
 - **Takeovers.** Temporary in-game boosts gated behind attribute thresholds. 2K
@@ -172,7 +181,7 @@ count is `Σ(ceiling − 24) = 1,328`, matching
 | `tier_requirements.json` | 212 | Attribute requirements per badge per creation tier — 53 × 4. Requirements are an ordered predicate list combined by each entry's `operator_to_next`. |
 | `token_costs.json` | 5,300 | Token price per badge, per tier, per height — 53 × 5 × 20. All 1,060 **legend** rows cost `0` — legend cannot be equipped at creation, so the builder has no price for it. Read `0` at legend as "not purchasable here", not "free". |
 | `token_contributions.json` | 31,500 | Tokens earned from one attribute at one rating at one height — 21 × 75 × 20. **The token function is additive across attributes**, so summing a build's 21 rows gives its exact token budget. Verified against 2,048 native vectors. |
-| `slot_allocations.json` | 2,123 | Ground-truth slot allocation for full vectors (2,048 random across 10 heights + 75 uniform). Slot allocation is *not* additive, so it cannot be derived from the contribution table — these records are what pin the allocator down. |
+| `slot_allocations.json` | 2,123 | Ground-truth slot allocation for full vectors (2,048 random across 10 heights + 75 uniform). Slot allocation is *not* additive, so it cannot be derived from the contribution table — these records are what pin the allocator down. `slot_total` is only ever 20 or 0; the 25 zero rows are the uniform vectors at ratings 25–49, which qualify for no badge at all. |
 | `slot_allocator_constants.json` | 8 | Allocator inputs: 20 total slots, blend factor, per-discipline minimums/maximums, tie-break orders, and the default allocation. |
 
 ⚠️ **The allocator formula is unresolved.** The plausible reading of the
@@ -272,18 +281,34 @@ occurrences of strings like `PlayerRestrictions`. It is included as the sealed
 upstream original, not as usable data — the named export is what you want, and
 the probe measurements are what pin the values to behaviour.
 
-Key families in `progression_attributes.txt`:
+Key families in `progression_attributes.txt` — all 16,007 key/value pairs
+accounted for:
 
 | Key family | Rows | Holds |
 |---|---|---|
 | `HeightBasedAttributeWeight[H][PLAYERTYPE][ATTR]` | 6,271 | per-archetype OVR weights |
 | `AssociatedAttributeConstraints[...]` | 3,091 | linked-attribute minimums (`AssociatedAttribute` + `MaxDelta`) |
-| `PlayerRestrictions[NBA].WeightMultiplier[...]` | 2,018 | weight → ceiling multipliers |
-| `PlayerRestrictions[NBA].WingspanMultiplier[...]` | 1,934 | wingspan → ceiling multipliers |
-| `PlayerRestrictions[NBA].HeightMultiplier[H][ATTR]` | 805 | height → ceiling multipliers |
-| `AttributeRatingWeightScale[ATTR][rating]` | 551 | the non-linear per-rating scale |
+| `PlayerRestrictions[WNBA].*` | 2,359 | the WNBA mirror of every `[NBA]` family. Nothing in this dataset was measured against it. |
+| `PlayerRestrictions[NBA].WeightMultiplier[...]` | 1,051 | weight → ceiling multipliers |
+| `PlayerRestrictions[NBA].WingspanMultiplier[...]` | 967 | wingspan → ceiling multipliers |
+| `AttributeRatingWeightScale[ATTR][rating]` | 551 | the non-linear per-rating scale, ratings 75–99 (implicitly `1.0` below 75) |
+| `DataPerArchetype[NAME].MinMaxValuePerAttribute[...]` | 504 | per-attribute ranges for 12 **named** archetypes — ⚠️ see below |
+| `PlayerRestrictions[NBA].HeightMultiplier[H][ATTR]` | 416 | height → ceiling multipliers |
+| `AttributeGradeMinValueRequired[POS][ATTR][GRADE]` | 316 | `BAD`/`AVERAGE`/`GOOD` thresholds per position. Not investigated. |
 | `HeightBasedOverallLerp[H].Value[i][j]` | 124 | final raw → OVR interpolation endpoints |
-| `PlayerRestrictions[NBA].MinMax*`, `Min/MaxWeight`, `Default*` | 64 | legal body ranges per position |
+| `StrengthsAndWeaknessesTieBreakerRank[...]` | 106 | not investigated |
+| `AttributeImportance[...]` | 59 | not investigated |
+| `BuildSpecAttributeRequirement[DISCIPLINE][i]` | 52 | attribute predicates per discipline, same operator grammar as badge tiers. Not investigated, and plausibly relevant to the unresolved slot allocator. |
+| `AttributePreset[INITIAL].Value[ATTR]` | 42 | the starting spread — every attribute at 25 |
+| `PlayerRestrictions[NBA].MinMax*`, `Min/MaxWeight`, `Default*` | 32 | legal body ranges per position |
+| `HeightInWholeInches`, `PerPosition[...]`, `AttributeWeaknessPriority`, `AttributePriceCapOverMaxRatioToMultiplierLerp`, `VCRequiredToBuyRangeOfAttributes`, `PlayerRestrictions[NBA].Num*`, stamina | 66 | not investigated |
+
+Two things to know before counting rows yourself. The multiplier counts are
+**`[NBA]` only** — a plain `grep WeightMultiplier` returns 2,018 because it also
+catches the WNBA mirror, and the ceiling formula below uses the NBA tables
+exclusively. And the export carries **27 degenerate `,` rows** with neither key
+nor value, so a naive split on comma yields 16,034 records rather than 16,007.
+Both are upstream artifacts, left in place because the export is unmodified.
 
 **The attribute ceiling formula**, which reproduces all 21 measured ceilings in
 `bodies/attribute_caps_sample.json` exactly:
@@ -296,6 +321,42 @@ Weight and wingspan multipliers interpolate linearly between the two endpoints
 shipped for each whole-inch height. Position restricts which bodies are legal but
 does **not** enter the equation.
 
+⚠️ **`StandingDunk` has no height multiplier below 73 inches.** The NBA
+`HeightMultiplier` block holds 416 rows where 20 heights × 21 attributes would
+give 420: `HEIGHT_05`–`HEIGHT_08` (69–72 in) have no `[StandingDunk]` entry. Those
+are legal PG heights, so the ceiling formula above simply cannot be evaluated for
+`standing_dunk` on a 69–72 in build. The reference body is 75 in and does not hit
+the gap, so no measurement in this dataset covers it. Whether the engine
+substitutes `1.0`, reuses `HEIGHT_09`, or forces the floor was never determined.
+
+**The OVR pricing function**, which reproduces all 256 vectors in
+`overall/mixed_vectors.json` and all 75 in `overall/uniform_ratings.json`:
+
+```python
+# w = HeightBasedAttributeWeight[H][PLAYERTYPE][ATTR]   (sums to ~100 per type)
+# s = AttributeRatingWeightScale[ATTR][rating]          (absent below 75 -> 1.0)
+num = sum(w[a] * s(a, r[a]) * r[a] for a in attrs)
+den = sum(w[a] * s(a, r[a])        for a in attrs)
+raw = num / den
+
+# HeightBasedOverallLerp[H]: Value[0] is the input range, Value[1] the output range
+ovr = lerp(raw, Value[0][0], Value[0][1], Value[1][0], Value[1][1])
+```
+
+Evaluate that for all 15 archetypes and keep the **highest** result; that
+archetype is the reported `player_type`. The value you get is `uncapped`.
+`detailed` is `uncapped` clamped to 99 — in `float32` the clamp surfaces as
+`98.999992`, not `99.0`. Only 1 of the 256 mixed vectors (sample 25) actually
+exceeds 99 before clamping, so the distinction is easy to miss until it bites.
+`best` is clamped too, but saturates to exactly `99.0` and reports archetype `0`,
+as described under `overall/` above.
+
+The denominator is the trap: it is the **scale-weighted** sum `Σ w·s`, not `Σ w`.
+Normalising by `Σ w` reproduces 1 of 256 vectors. With `Σ w·s` all 256 `uncapped`
+values match to 2.5 × 10⁻⁵, all 256 winning archetypes are correct, and all 75
+uniform ratings reproduce. The `float32` caveat below applies if you need the
+last decimal rather than 1e-4.
+
 **Linked attributes.** `AssociatedAttributeConstraints` encodes automatic
 minimums: raising a source attribute forces each associated attribute to at least
 `source − MaxDelta`. These cascade, since a forced raise can itself be a source.
@@ -307,6 +368,17 @@ would read as "speed must be at least speed_with_ball". A build observed in the
 retail builder UI carries `speed_with_ball` 88 with `speed` 87, so that reading is
 wrong. Treat `MaxDelta 0` as a special case, not as a constraint, until its real
 meaning is recovered.
+
+⚠️ **`DataPerArchetype` names 12 archetypes, and they are *not* the 15
+`PLAYERTYPE` indices.** The export ships attribute ranges under readable names —
+`SHARPSHOOTER`, `PAINT_BEAST`, `LOCKDOWN_DEFENDER`, `TWO_WAY_PLAYMAKER` and eight
+more. It is tempting to read these as the missing labels for `player_type` 0–14.
+They are not, on three counts: there are 12 of them against 15 indices; pricing
+each archetype's own spec vector with the function above collapses all 12 onto
+just three winning `player_type` values at 6'3" and a single one at 6'9"; and
+`PAINT_BEAST` pins `StandingDunk` to 25–25, which is incoherent for that name.
+The family reads as vestigial data from an earlier game. It is documented here
+only so the names are not mistaken for the mapping that caveat 3 says is missing.
 
 ---
 
@@ -361,10 +433,12 @@ Read these before using the numbers.
    at the reference body only. The tuning tables generalise; these do not.
 3. **`player_type` 1 never appears** as a winner in the 256 mixed vectors. There
    are 15 archetypes (0–14) and 14 were observed winning; absence is not evidence
-   the archetype does not exist. The dataset carries no names for these indices,
-   but one is pinned externally: a PG 6'3"/194 lb/6'6" build shown in the retail
-   builder UI as **"Playshot Point"** computes `player_type` 6 as its winning
-   archetype, so 6 is very likely that label.
+   the archetype does not exist. The dataset carries no names for these indices —
+   the 12 names under `DataPerArchetype` are a different, apparently vestigial
+   family and do not map, as shown in `tuning/` above. One index is pinned
+   externally: a PG 6'3"/194 lb/6'6" build shown in the retail builder UI as
+   **"Playshot Point"** computes `player_type` 6 as its winning archetype, so 6 is
+   very likely that label.
 4. **Takeover attribute codes are unresolved.** See above.
 5. **Badge display names** are high-confidence but not exhaustively verified.
    Badge *IDs* are authoritative. 2K publicly named only three of 2K27's new
